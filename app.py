@@ -1,4 +1,5 @@
 import sys
+import datetime
 from PyQt6 import QtWidgets, QtCore, QtGui
 from ui.main_window import Ui_MainWin
 from ui.addtask import Ui_TaskWin
@@ -14,8 +15,19 @@ class TaskWindow(QtWidgets.QDialog):
         self.task_id = task_id
         self.is_edit_mode = task_id is not None
         
+        # Настраиваем DateTimeEdit
+        self.setup_datetime()
         self.setup_connections()
         self.load_task_data()
+        
+    def setup_datetime(self):
+        """Настраивает виджет даты и времени"""
+        # Устанавливаем текущую дату и время по умолчанию
+        current_datetime = QtCore.QDateTime.currentDateTime()
+        self.ui.dateTimeEdit.setDateTime(current_datetime)
+        
+        # Формат отображения
+        self.ui.dateTimeEdit.setDisplayFormat("dd-MM-yyyy HH:mm")
         
     def setup_connections(self):
         self.ui.savetask.clicked.connect(self.save_task)
@@ -28,6 +40,16 @@ class TaskWindow(QtWidgets.QDialog):
             self.ui.nametask.setText(task['name'])
             self.ui.abouttask.setPlainText(task['text'])
             
+            # Загружаем дату из задачи
+            try:
+                task_date = QtCore.QDateTime.fromString(task['date'], "dd-MM-yyyy HH:mm")
+                if task_date.isValid():
+                    self.ui.dateTimeEdit.setDateTime(task_date)
+            except:
+                # Если не удалось распарсить дату, используем текущую
+                current_datetime = QtCore.QDateTime.currentDateTime()
+                self.ui.dateTimeEdit.setDateTime(current_datetime)
+        
     def save_task(self):
         """Сохраняет новую или редактируемую задачу"""
         name = self.ui.nametask.text().strip()
@@ -36,13 +58,17 @@ class TaskWindow(QtWidgets.QDialog):
         if not name:
             QtWidgets.QMessageBox.warning(self, "Ошибка", "Введите название задачи!")
             return
+        
+        # Получаем дату из DateTimeEdit
+        date_time = self.ui.dateTimeEdit.dateTime()
+        formatted_date = date_time.toString("dd-MM-yyyy HH:mm")
             
         if self.is_edit_mode:
-            # Редактируем существующую задачу
-            self.todo_app.todo.edit_task(self.task_id, name, text)
+            # Редактируем существующую задачу с новой датой
+            self.todo_app.todo.edit_task(self.task_id, name, text, formatted_date)
         else:
-            # Добавляем новую задачу
-            self.todo_app.todo.add_task(name, text)
+            # Добавляем новую задачу с выбранной датой
+            self.todo_app.todo.add_task(name, text, formatted_date)
             
         self.todo_app.update_task_list()
         self.accept()
@@ -70,11 +96,11 @@ class MainWindow(QtWidgets.QDialog):
         self.ui = Ui_MainWin()
         self.ui.setupUi(self)
 
-        # Инициализируем переменные ДО вызова методов
+        # Инициализируем TodoList с автосохранением в JSON
         self.todo = TodoList()
         self.show_completed = True
 
-        self.add_sample_tasks()
+        # Убираем тестовые задачи, т.к. они теперь загружаются из файла
         self.update_task_list()
 
         # Подключаем сигналы
@@ -147,12 +173,6 @@ class MainWindow(QtWidgets.QDialog):
             if reply == QtWidgets.QMessageBox.StandardButton.Yes:
                 self.todo.delete_task(task_id)
                 self.update_task_list()
-
-    def add_sample_tasks(self):
-        """Тестовые задачи для отладки"""
-        self.todo.add_task("Купить продукты", "Молоко, хлеб, яйца")
-        self.todo.add_task("Сделать домашку", "По математике и физике")
-        self.todo.add_task("Встреча с друзьями", "В кальянке в 18:00")
 
     def update_task_list(self):
         """Обновляет список задач в интерфейсе"""
