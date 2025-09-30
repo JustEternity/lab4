@@ -43,44 +43,4 @@ class TodoList:
             status = "✓" if task['done'] else "✗"
             print(f"{task_id}. [{status}] {task['date']} {task['name']} {task['text']}")
 
-def main():
-    todo = TodoList()
 
-    while True:
-        print("\n1. Добавить задачу")
-        print("2. Удалить задачу")
-        print("3. Редактировать задачу")
-        print("4. Отметить выполненной")
-        print("5. Снять отметку")
-        print("6. Показать задачи")
-        print("7. Выйти")
-
-        choice = input("\nВыберите действие: ")
-
-        if choice == '1':
-            name = input("Введите название задачи: ")
-            text = input("Введите описание задачи: ")
-            todo.add_task(name, text)
-        elif choice == '2':
-            task_id = int(input("Введите ID задачи: "))
-            todo.delete_task(task_id)
-        elif choice == '3':
-            task_id = int(input("Введите ID задачи: "))
-            new_name = input("Введите новое название: ")
-            new_text = input("Введите новое описание: ")
-            todo.edit_task(task_id, new_name, new_text)
-        elif choice == '4':
-            task_id = int(input("Введите ID задачи: "))
-            todo.mark_done(task_id)
-        elif choice == '5':
-            task_id = int(input("Введите ID задачи: "))
-            todo.mark_done(task_id, False)
-        elif choice == '6':
-            todo.show_tasks()
-        elif choice == '7':
-            break
-        else:
-            print("Неверный ввод")
-
-if __name__ == "__main__":
-    main()
