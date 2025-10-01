@@ -8,7 +8,7 @@ class Ui_MainWin(object):
         MainWin.setMinimumSize(QtCore.QSize(500, 550))
         MainWin.setMaximumSize(QtCore.QSize(500, 550))
         MainWin.setStyleSheet("#MainWin {\n"
-"    background-color: #f8f9fa;\n"
+"    background-color: #ccffff;\n"
 "    border: 1px solid #dee2e6;\n"
 "}")
         MainWin.setSizeGripEnabled(False)
@@ -16,15 +16,18 @@ class Ui_MainWin(object):
         self.listtask = QtWidgets.QListWidget(parent=MainWin)
         self.listtask.setGeometry(QtCore.QRect(10, 100, 291, 431))
         self.listtask.setObjectName("listtask")
+        self.listtask.setStyleSheet("#listtask {\n"
+"    background-color: #FFFCE9;\n"
+"}")
         self.label = QtWidgets.QLabel(parent=MainWin)
         self.label.setGeometry(QtCore.QRect(10, 10, 291, 16))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.label.setFont(font)
         self.label.setObjectName("label")
-        self.tableView = QtWidgets.QTableView(parent=MainWin)
-        self.tableView.setGeometry(QtCore.QRect(10, 60, 291, 31))
-        self.tableView.setObjectName("tableView")
+        # self.tableView = QtWidgets.QTableView(parent=MainWin)
+        # self.tableView.setGeometry(QtCore.QRect(10, 60, 291, 31))
+        # self.tableView.setObjectName("tableView")
         self.radioButton = QtWidgets.QRadioButton(parent=MainWin)
         self.radioButton.setGeometry(QtCore.QRect(10, 30, 291, 20))
         self.radioButton.setObjectName("radioButton")
@@ -35,11 +38,21 @@ class Ui_MainWin(object):
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.addnewtask = QtWidgets.QPushButton(parent=MainWin)
-        self.addnewtask.setGeometry(QtCore.QRect(340, 490, 131, 24))
+        self.addnewtask.setGeometry(QtCore.QRect(340, 490, 140, 35))
         self.addnewtask.setObjectName("addnewtask")
+        self.addnewtask.setStyleSheet("#addnewtask {\n"
+"    background-color: #FFCC99;\n"
+"    border: 1px solid #dee2e6;\n"
+"    border-radius: 10%;\n"
+"}")
         self.marktask = QtWidgets.QPushButton(parent=MainWin)
         self.marktask.setGeometry(QtCore.QRect(310, 100, 51, 41))
         self.marktask.setObjectName("marktask")
+        self.marktask.setStyleSheet("#marktask {\n"
+"    background-color: #FFCC99;\n"
+"    border: 1px solid #dee2e6;\n"
+"    border-radius: 15%;\n"
+"}")
 
         self.retranslateUi(MainWin)
         QtCore.QMetaObject.connectSlotsByName(MainWin)
